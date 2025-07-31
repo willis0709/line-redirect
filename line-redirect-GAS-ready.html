@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>跳轉中...</title>
+  <title>正在跳轉至官方 LINE...</title>
 </head>
 <body>
   <script>
-    const LINE_OA_URL = "https://page.line.me/@584bnrkd"; // 改成你自己的 LINE 官方帳號網址
-    const GAS_ENDPOINT = "https://script.google.com/macros/s/https://script.google.com/macros/library/d/1Qw-TeoQ_WTbYC1d_qKGFNa4S56QOX81jcL1qUMaR_FHBH0zGzF4PQmhI/3"; // 改成你自己的網址
+    const LINE_OA_URL = "https://page.line.me/@584bnrkd"; // ✅ 你的 LINE 官方網址
+    const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbxps7vHrEUeerhEcARGsFTZyyGqXfKe4cCXaYhLtk8oYgBMNfKfLEl1Qa4BpnYhQWZ04/exec"; // ✅ 你的 GAS 網址
 
     function getQueryParam(name) {
       const params = new URLSearchParams(window.location.search);
@@ -28,11 +28,10 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data)
         });
-      } catch (e) {
-        console.error("送出追蹤資料時失敗：", e);
+      } catch (err) {
+        console.warn("傳送 GAS 失敗：", err);
       }
 
-      // 無論成功或失敗都要跳轉
       window.location.href = LINE_OA_URL;
     }
 
