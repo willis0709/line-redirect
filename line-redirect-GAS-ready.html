@@ -1,6 +1,6 @@
 <script>
-  const LINE_OA_URL = "https://page.line.me/584bnrkd"; // 你的 LINE 官方網址
-  const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbyFTRsbSqSnI4w4t063BrGve44Ft9vrgJszAxWamlduJAXU90P2jZ2A0xhU7WgShEiz/exec"; // GAS網址
+  const LINE_OA_URL = "https://page.line.me/584bnrkd";  // ✅ 你的 LINE 官方網址
+  const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbyFTRsbSqSnIw4t063BrGve44Ft9vrgJszAxWamLduJAXU90P2jZ2A0xhU7WgShEiz/exec"; // ✅ 你的 GAS 執行網址
 
   function getQueryParam(name) {
     const params = new URLSearchParams(window.location.search);
@@ -24,18 +24,16 @@
       });
 
       const result = await res.json();
-      console.log("GAS 回傳結果：", result);
+      console.log("✅ GAS 回傳結果：", result);
 
     } catch (err) {
-      console.warn("GAS 傳送失敗：", err);
+      console.warn("⚠️ GAS 傳送失敗：", err);
     }
 
-   const result = await res.json();
-console.log("GAS 回傳結果：", result);
-
-// ✅ 確保寫入完成再跳轉
-window.location.href = LINE_OA_URL;
+    // ✅ 無論成功或失敗，最後都會跳轉
+    window.location.href = LINE_OA_URL;
   }
 
+  // 🚀 頁面載入後立即執行
   reportAndRedirect();
 </script>
