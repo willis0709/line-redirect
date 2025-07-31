@@ -1,50 +1,50 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Redirect to LINE</title>
-    <script>
-      const LINE_OA_URL = "https://page.line.me/584bnrkd"; // LINE 官方網址
-      const GAS_ENDPOINT =
-        "https://script.google.com/macros/s/AKfycbyFTRsbSqSnI4w4t063BrGve44Ft9vrgJszAxWamlduJAXU90P2jZ2A0xhU7WgShEiz/exec";
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>加入 LINE</title>
+</head>
+<body>
+  <p>正在跳轉至 LINE，請稍候...</p>
 
-      function getQueryParam(name) {
-        const params = new URLSearchParams(window.location.search);
-        return params.get(name);
+  <script>
+    const LINE_OA_URL = "https://page.line.me/584bnrkd"; // << 修改為你的 LINE 官方網址
+    const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbyFTRsbSqSnIw4t063BrGve44Ft9vrgJszAxWamLduJAXU90P2jZ2A0xhU7WgShEiz/exec"; // << 修改為你的 GAS 網址
+
+    // 擷取網址參數
+    function getQueryParam(name) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name) || "";
+    }
+
+    async function reportAndRedirect() {
+      const data = {
+        gym: getQueryParam("gym"),
+        ua: navigator.userAgent,
+        referrer: document.referrer
+      };
+
+      try {
+        const res = await fetch(GAS_ENDPOINT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+        console.log("GAS 回傳結果:", result);
+      } catch (err) {
+        console.warn("GAS 傳送失敗:", err);
+      } finally {
+        // 無論成功與否都跳轉
+        window.location.href = LINE_OA_URL;
       }
+    }
 
-      async function reportAndRedirect() {
-        const data = {
-          gym: getQueryParam("gym"),
-          ua: navigator.userAgent,
-          referrer: document.referrer,
-        };
-
-        try {
-          const res = await fetch(GAS_ENDPOINT, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-          });
-
-          const result = await res.json();
-          console.log("✅ GAS 回傳結果：", result);
-        } catch (err) {
-          console.warn("⚠️ GAS 傳送失敗：", err);
-        }
-
-        // 延遲跳轉，確保資料寫入成功
-        setTimeout(() => {
-          window.location.href = LINE_OA_URL;
-        }, 800);
-      }
-
-      reportAndRedirect();
-    </script>
-  </head>
-  <body>
-    <p>資料記錄中，請稍候...</p>
-  </body>
+    reportAndRedirect();
+  </script>
+</body>
 </html>
