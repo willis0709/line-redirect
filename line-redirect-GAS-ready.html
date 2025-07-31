@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Redirecting...</title>
   <script>
     // 請替換為你的 GAS URL
     const GAS_URL = "https://script.google.com/macros/s/AKfycbwS76BLfrFst0QnPQ44K2Z0gLZbEDZvLVCh3290EH_2QeoXY1iz0WaLD30letsp1ih2/exec";
 
-    // 資料送出後要跳轉的 LINE 加好友連結
-    const REDIRECT_URL = "https://line.me/R/ti/p/@584bnrkd"; // 可替換成動態參數
+    // 加好友後要導向的 LINE 網址
+    const REDIRECT_URL = "https://line.me/R/ti/p/584bnrkd"; // 可替換為你的 LINE 加好友網址
 
     fetch(GAS_URL, {
       method: "POST",
@@ -26,8 +26,7 @@
     })
     .catch(err => {
       console.error("❌ 上傳失敗", err);
-      // 即使失敗也跳轉，避免用戶卡住
-      window.location.href = REDIRECT_URL;
+      window.location.href = REDIRECT_URL; // 即使失敗仍然導轉，避免卡住
     });
   </script>
 </head>
