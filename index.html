@@ -1,47 +1,45 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Redirecting...</title>
-    <script>
-      // ✅ Google Apps Script URL
-      const GAS_URL = "https://script.google.com/macros/s/AKfycbwS76BLfrFst0QnPQ44K2Z0gLZbEDZvLVCh3290EH_2QeoXY1iz0WaLD30letsp1ih2/exec";
+<head>
+  <meta charset="UTF-8" />
+  <title>Redirecting...</title>
+  <script>
+    // ✅ 請替換為你的 Google Apps Script URL
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbwS76BLfrFst0QnPQ44K2Z0gLZbEDZvLVCh3290EH_2QeoXY1iz0WaLD30letsp1ih2/exec";
 
-      // ✅ LINE 加好友的 redirect 目標
-      const REDIRECT_URL = "https://line.me/R/ti/p/584bnrkd"; // 修改為你的 LINE OA
+    // ✅ 請替換為你的 LINE 加好友連結
+    const DEFAULT_LINE_URL = "https://line.me/R/ti/p/@584bnrkd";
 
-      // ✅ 取得網址中的 ?gym=xxx 參數
-      function getQueryParam(param) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(param) || "";
-      }
+    // 取得 URL 參數中的 gym 名稱
+    function getQueryParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name) || "";
+    }
 
-      // ✅ 執行上報 + 導向
-      const data = {
-        gym: getQueryParam("gym") || "Unknown",
+    const gym = getQueryParam("gym") || "Unknown";
+
+    // 傳送資料到 Google Apps Script
+    fetch(GAS_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        gym: gym,
         ua: navigator.userAgent,
-        referrer: document.referrer,
-      };
-
-      fetch(GAS_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+        referrer: document.referrer
       })
-        .then((res) => res.json())
-        .then((result) => {
-          console.log("✅ 上傳成功", result);
-          window.location.href = REDIRECT_URL;
-        })
-        .catch((err) => {
-          console.error("❌ 上傳失敗", err);
-          window.location.href = REDIRECT_URL; // 即使失敗也照樣跳轉
-        });
-    </script>
-  </head>
-  <body>
-    <p>資料傳送中，請稍候...</p>
-  </body>
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log("✅ 資料上傳成功", data);
+      window.location.href = DEFAULT_LINE_URL;
+    })
+    .catch(err => {
+      console.error("❌ 上傳失敗", err);
+      window.location.href = DEFAULT_LINE_URL;
+    });
+  </script>
+</head>
+<body>
+  <p>資料傳送中，請稍候...</p>
+</body>
 </html>
