@@ -1,36 +1,47 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8" />
-  <title>Redirecting...</title>
-  <script>
-    // 請替換為你的 GAS URL
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbwS76BLfrFst0QnPQ44K2Z0gLZbEDZvLVCh3290EH_2QeoXY1iz0WaLD30letsp1ih2/exec";
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Redirecting...</title>
+    <script>
+      // ✅ Google Apps Script URL
+      const GAS_URL = "https://script.google.com/macros/s/AKfycbwS76BLfrFst0QnPQ44K2Z0gLZbEDZvLVCh3290EH_2QeoXY1iz0WaLD30letsp1ih2/exec";
 
-    // 加好友後要導向的 LINE 網址
-    const REDIRECT_URL = "https://line.me/R/ti/p/584bnrkd"; // 可替換為你的 LINE 加好友網址
+      // ✅ LINE 加好友的 redirect 目標
+      const REDIRECT_URL = "https://line.me/R/ti/p/584bnrkd"; // 修改為你的 LINE OA
 
-    fetch(GAS_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        gym: "RedRock",
+      // ✅ 取得網址中的 ?gym=xxx 參數
+      function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param) || "";
+      }
+
+      // ✅ 執行上報 + 導向
+      const data = {
+        gym: getQueryParam("gym") || "Unknown",
         ua: navigator.userAgent,
-        referrer: document.referrer
+        referrer: document.referrer,
+      };
+
+      fetch(GAS_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       })
-    })
-    .then(res => res.json())
-    .then(data => {
-      console.log("✅ 上傳成功", data);
-      window.location.href = REDIRECT_URL;
-    })
-    .catch(err => {
-      console.error("❌ 上傳失敗", err);
-      window.location.href = REDIRECT_URL; // 即使失敗仍然導轉，避免卡住
-    });
-  </script>
-</head>
-<body>
-  <p>資料傳送中，請稍候...</p>
-</body>
+        .then((res) => res.json())
+        .then((result) => {
+          console.log("✅ 上傳成功", result);
+          window.location.href = REDIRECT_URL;
+        })
+        .catch((err) => {
+          console.error("❌ 上傳失敗", err);
+          window.location.href = REDIRECT_URL; // 即使失敗也照樣跳轉
+        });
+    </script>
+  </head>
+  <body>
+    <p>資料傳送中，請稍候...</p>
+  </body>
 </html>
