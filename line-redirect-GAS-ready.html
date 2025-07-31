@@ -1,29 +1,42 @@
-<script>
-  const LINE_OA_URL = "https://page.line.me/@584bnrkd";  // 改成你的 LINE 官方帳號連結
-  const GAS_ENDPOINT = "https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbxlhBVPXmek5Y8sLMa9COqAGzRt-9-6UqAFOp4aS2a8c3vsMxzfibXcXy3Yoy9BWfPs/exec/exec";  // 改成你的 Google Apps Script 網址
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>跳轉中...</title>
+</head>
+<body>
+  <script>
+    const LINE_OA_URL = "https://page.line.me/@584bnrkd"; // 改成你自己的 LINE 官方帳號網址
+    const GAS_ENDPOINT = "https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbxlhBVPXmek5Y8sLMa9COqAGzRt-9-6UqAFOp4aS2a8c3vsMxzfibXcXy3Yoy9BWfPs/exec/exec"; // 改成你自己的網址
 
-  function getQueryParam(name) {
-    const params = new URLSearchParams(window.location.search);
-    return params.get(name);
-  }
+    function getQueryParam(name) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name);
+    }
 
-  async function reportAndRedirect() {
-    const data = {
-      gym: getQueryParam("gym"),
-      ua: navigator.userAgent,
-      referrer: document.referrer
-    };
+    async function reportAndRedirect() {
+      const data = {
+        gym: getQueryParam("gym"),
+        ua: navigator.userAgent,
+        referrer: document.referrer
+      };
 
-    await fetch(GAS_ENDPOINT, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    });
+      try {
+        await fetch(GAS_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+      } catch (e) {
+        console.error("送出追蹤資料時失敗：", e);
+      }
 
-    window.location.href = LINE_OA_URL;
-  }
+      // 無論成功或失敗都要跳轉
+      window.location.href = LINE_OA_URL;
+    }
 
-  reportAndRedirect();
-</script>
+    reportAndRedirect();
+  </script>
+</body>
+</html>
