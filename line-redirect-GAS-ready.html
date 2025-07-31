@@ -1,50 +1,37 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>加入 LINE</title>
-</head>
-<body>
-  <p>正在跳轉至 LINE，請稍候...</p>
-
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
   <script>
-    const LINE_OA_URL = "https://page.line.me/584bnrkd"; // << 修改為你的 LINE 官方網址
-    const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbwS76BLfrFst0QnPQ44K2Z0gLZbEDZvLVCh3290EH_2QeoXY1iz0WaLD30letsp1ih2/exec"; // << 修改為你的 GAS 網址
+    // 請替換為你的 GAS URL
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbwS76BLfrFst0QnPQ44K2Z0gLZbEDZvLVCh3290EH_2QeoXY1iz0WaLD30letsp1ih2/exec";
 
-    // 擷取網址參數
-    function getQueryParam(name) {
-      const params = new URLSearchParams(window.location.search);
-      return params.get(name) || "";
-    }
+    // 資料送出後要跳轉的 LINE 加好友連結
+    const REDIRECT_URL = "https://line.me/R/ti/p/@584bnrkd"; // 可替換成動態參數
 
-    async function reportAndRedirect() {
-      const data = {
-        gym: getQueryParam("gym"),
+    fetch(GAS_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        gym: "RedRock",
         ua: navigator.userAgent,
         referrer: document.referrer
-      };
-
-      try {
-        const res = await fetch(GAS_ENDPOINT, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(data)
-        });
-
-        const result = await res.json();
-        console.log("GAS 回傳結果:", result);
-      } catch (err) {
-        console.warn("GAS 傳送失敗:", err);
-      } finally {
-        // 無論成功與否都跳轉
-        window.location.href = LINE_OA_URL;
-      }
-    }
-
-    reportAndRedirect();
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log("✅ 上傳成功", data);
+      window.location.href = REDIRECT_URL;
+    })
+    .catch(err => {
+      console.error("❌ 上傳失敗", err);
+      // 即使失敗也跳轉，避免用戶卡住
+      window.location.href = REDIRECT_URL;
+    });
   </script>
+</head>
+<body>
+  <p>資料傳送中，請稍候...</p>
 </body>
 </html>
