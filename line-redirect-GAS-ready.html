@@ -4,17 +4,15 @@
     <meta charset="UTF-8" />
     <title>Redirect to LINE</title>
     <script>
-      const LINE_OA_URL = "https://page.line.me/584bnrkd"; // 你的 LINE 官方網址
+      const LINE_OA_URL = "https://page.line.me/584bnrkd"; // LINE 官方網址
       const GAS_ENDPOINT =
-        "https://script.google.com/macros/s/AKfycbyFTRsbSqSnIw4t063BrGve44Ft9vrgJszAxWamLduJAXU90P2jZ2A0xhU7WgShEiz/exec"; // GAS Web App 連結
+        "https://script.google.com/macros/s/AKfycbyFTRsbSqSnIw4t063BrGve44Ft9vrgJszAxWamLduJAXU90P2jZ2A0xhU7WgShEiz/exec";
 
-      // 抓取網址參數 ?gym=xxx
       function getQueryParam(name) {
         const params = new URLSearchParams(window.location.search);
         return params.get(name);
       }
 
-      // 傳送資料 + 跳轉 LINE
       async function reportAndRedirect() {
         const data = {
           gym: getQueryParam("gym"),
@@ -37,15 +35,16 @@
           console.warn("⚠️ GAS 傳送失敗：", err);
         }
 
-        // 📌 成功或失敗都照樣跳轉
-        window.location.href = LINE_OA_URL;
+        // 延遲跳轉，確保資料寫入成功
+        setTimeout(() => {
+          window.location.href = LINE_OA_URL;
+        }, 800);
       }
 
-      // 頁面載入時自動執行
       reportAndRedirect();
     </script>
   </head>
   <body>
-    <p>即將為您跳轉至 LINE 官方帳號...</p>
+    <p>資料記錄中，請稍候...</p>
   </body>
 </html>
