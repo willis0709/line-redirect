@@ -1,41 +1,38 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>正在跳轉至官方 LINE...</title>
-</head>
-<body>
-  <script>
-    const LINE_OA_URL = "https://page.line.me/@584bnrkd"; // ✅ 你的 LINE 官方網址
-    const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbxlhBVPXmek5Y8sLMa9CQoAGzRt-9-6UqAFOp4aS2a8c3vs.../exec"; // ✅ 你的 GAS 網址
+<script>
+  const LINE_OA_URL = "https://page.line.me/@584bnrkd"; // 你的 LINE 官方網址
+  const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbxlhBVPXmek5Y8sLM.../exec"; // GAS網址
 
-    function getQueryParam(name) {
-      const params = new URLSearchParams(window.location.search);
-      return params.get(name);
+  function getQueryParam(name) {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(name);
+  }
+
+  async function reportAndRedirect() {
+    const data = {
+      gym: getQueryParam("gym"),
+      ua: navigator.userAgent,
+      referrer: document.referrer
+    };
+
+    try {
+      const res = await fetch(GAS_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+      console.log("GAS 回傳結果：", result);
+
+    } catch (err) {
+      console.warn("GAS 傳送失敗：", err);
     }
 
-    async function reportAndRedirect() {
-      const data = {
-        gym: getQueryParam("gym"),
-        ua: navigator.userAgent,
-        referrer: document.referrer
-      };
+    // 無論成功或失敗，都跳轉
+    window.location.href = LINE_OA_URL;
+  }
 
-      try {
-        await fetch(GAS_ENDPOINT, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
-        });
-      } catch (err) {
-        console.warn("傳送 GAS 失敗：", err);
-      }
-
-      window.location.href = LINE_OA_URL;
-    }
-
-    reportAndRedirect();
-  </script>
-</body>
-</html>
+  reportAndRedirect();
+</script>
